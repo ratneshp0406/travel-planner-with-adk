@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adk-travel-planner
+  labels:
+    app: travel-planner
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: travel-planner
+  template:
+    metadata:
+      labels:
+        app: travel-planner
+    spec:
+      containers:
+      - name: agent-container
+        image: ratneshp0406/travel-planner-with-adk:latest
+        ports:
+        - containerPort: 8000
+        env:
+        # Securely pulling the API key from Kubernetes Secrets
+        - name: GEMINI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: gemini-api-secret
+              key: api-key
